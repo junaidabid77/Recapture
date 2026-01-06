@@ -1,0 +1,8 @@
+# Recapture v1.0 Build Dependencies
+# Python 3.10+ Recommended
+
+pyinstaller>=6.0.0
+pytsk3>=20230101
+Pillow>=10.0.0
+
+# Note: pyewf is optional/deprecated for this release (TSK handles E01)

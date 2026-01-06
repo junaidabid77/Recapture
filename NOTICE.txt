@@ -1,0 +1,32 @@
+RECAPTURE v1.0
+Third-Party Legal Notices
+-------------------------
+
+This product includes third-party software components subject to their
+own licenses:
+
+1. PyInstaller
+   Licensed under the GNU General Public License v2 with a special
+   exception allowing distribution of compiled executables.
+   https://pyinstaller.org
+
+2. The Sleuth Kit (via pytsk3)
+   Licensed under the GNU General Public License (GPL) / Common Public License (CPL).
+   https://www.sleuthkit.org
+
+3. libewf (Legacy Support)
+   Licensed under the GNU Lesser General Public License (LGPL).
+   https://github.com/libyal/libewf
+
+These components are used in accordance with their respective licenses.
+
+-------------------------------------------------------------------------
+SOURCE CODE AVAILABILITY
+Source code for this project is publicly available to ensure transparency, 
+auditability, and evidential integrity.
+-------------------------------------------------------------------------
+
+WARRANTY DISCLAIMER
+This software is provided "as is", without warranty of any kind, express 
+or implied, including but not limited to the warranties of merchantability, 
+fitness for a particular purpose and noninfringement.

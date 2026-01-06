@@ -1,0 +1,20 @@
+# Ignore Build Output
+Recapture_v1.0_Gold/
+build/
+dist/
+*.spec
+
+# Ignore Python Cache
+__pycache__/
+*.pyc
+
+# Ignore Test Data
+teste01/
+
+# Ignore System Files
+Thumbs.db
+Desktop.ini
+
+# Ignore Virtual Environments (if any)
+venv/
+env/
