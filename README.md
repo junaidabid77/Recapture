@@ -56,5 +56,4 @@ DISCLAIMER
 ----------
 This tool is designed for triage and preliminary analysis. While Recapture 
 utilises industry-standard libraries (SleuthKit/TSK), all findings should 
-be verified with a validated forensic suite before being presented in 
-court proceedings.
+be verified with a validated forensic suite.
