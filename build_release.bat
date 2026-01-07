@@ -16,7 +16,7 @@ del /q *.spec
 if exist "maintest.py" del "maintest.py"
 
 :: 2. CREATE DUMMY README/NOTICE IF MISSING
-if not exist "README.txt" echo Recapture v1.0 > README.txt
+if not exist "README.md" echo # Recapture v1.0 > README.md
 if not exist "NOTICE.txt" echo Legal Notice > NOTICE.txt
 
 :: 3. BUILD GUI VERSION (With Recapture.png Splash)
@@ -32,10 +32,11 @@ if exist "Recapture.png" (
     pyinstaller --noconfirm --onefile --windowed --name "Recapture" --icon="Recapture.ico" --clean main.py
 )
 
-:: 4. BUILD CLI VERSION (No Splash)
+:: 4. BUILD CLI VERSION (No Splash, Console Mode)
 echo.
 echo [3/5] Compiling CLI (Recapture_CLI.exe)...
-pyinstaller --noconfirm --onefile --console --name "Recapture_CLI" --icon="Recapture.ico" recapture.py
+:: CHANGED: Using cli.py instead of recapture.py
+pyinstaller --noconfirm --onefile --console --name "Recapture_CLI" --icon="Recapture.ico" cli.py
 
 :: 5. ORGANIZE RELEASE FOLDER
 echo.
@@ -46,7 +47,8 @@ mkdir %OUT_DIR%
 
 move "dist\Recapture.exe" %OUT_DIR%
 move "dist\Recapture_CLI.exe" %OUT_DIR%
-copy "README.txt" %OUT_DIR%
+:: CHANGED: Copying README.md instead of TXT
+copy "README.md" %OUT_DIR%
 copy "NOTICE.txt" %OUT_DIR%
 if exist "bad_hashes.txt" copy "bad_hashes.txt" %OUT_DIR%
 
