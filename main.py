@@ -32,9 +32,9 @@ class App:
     def __init__(self, root):
         self.window = root
         self.window.title("Recapture Forensic Explorer v1.0 | Gold Master") 
-        self.window.geometry("700x980")
+        self.window.geometry("700x910")
         self.window.resizable(False, False)
-        self.window.configure(bg="#222") # Dark Theme
+        self.window.configure(bg="#222")
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.is_running = False
 
@@ -53,7 +53,6 @@ class App:
         safe_close_splash()
 
     def build_ui(self):
-        # BANNER
         tk.Label(self.window, text="RECAPTURE", bg="#222", fg="white", font=("Segoe UI", 20, "bold")).pack(pady=(15, 5))
         tk.Label(self.window, text="v1.0 | Gold Master", bg="#222", fg="#aaa").pack(pady=(0, 15))
 
@@ -149,11 +148,8 @@ class App:
         
         self.status = tk.Label(stat_frame, text="Ready", bg="#222", fg="#aaa", anchor="w")
         self.status.pack(side="left", fill="x", expand=True)
-        
-        # --- NEW PERCENTAGE LABEL ---
-        self.status_pct = tk.Label(stat_frame, text="0%", bg="#222", fg="white", font=("Segoe UI", 9, "bold"))
-        self.status_pct.pack(side="right", padx=10)
 
+        # --- SINGLE LABEL FOR PERCENT + ETA ---
         self.status_eta = tk.Label(stat_frame, text="", bg="#222", fg="#007acc", font=("Segoe UI", 9, "bold"))
         self.status_eta.pack(side="right")
 
@@ -161,7 +157,6 @@ class App:
         self.console.pack(fill="both", expand=True, padx=20, pady=(0, 10))
         self.console.config(state="disabled")
 
-        # FOOTER CREDITS
         tk.Label(self.window, text="Created by Junaid Abid | Contact: Junaid@junaid.ltd", bg="#222", fg="#555", font=("Segoe UI", 8)).pack(pady=5)
 
     def create_dark_entry(self, parent):
@@ -174,12 +169,14 @@ class App:
         hw.configure(bg="#222")
         p = tk.Frame(hw, bg="#222", padx=20, pady=20); p.pack(fill="both", expand=True)
         tk.Label(p, text="Report Icon Legend", bg="#222", fg="white", font=("Segoe UI", 14, "bold")).pack(pady=(0,20))
-        items = [("Strikethrough", "Deleted File (Recovered)", "#aaa", True),
-                 ("Red Text", "Signature Mismatch", "#ff5555", False),
-                 ("Purple Text", "Keyword Hit", "#d186ff", False),
-                 ("Bold / Alert", "Hash Match (Known Bad)", "#ff5555", False),
-                 ("📁 Folder", "Standard Directory", "white", False),
-                 ("👻 Ghost", "Deleted/Unallocated", "#aaa", False)]
+        items = [
+            ("Strikethrough", "Deleted File (Recovered)", "#aaa", True),
+            ("Red Text", "Signature Mismatch", "#ff5555", False),
+            ("Purple Text", "Keyword Hit", "#d186ff", False),
+            ("Bold / Alert", "Hash Match (Known Bad)", "#ff5555", False),
+            ("📁 Folder", "Standard Directory", "white", False),
+            ("👻 Ghost", "Deleted/Unallocated", "#aaa", False)
+        ]
         for t, d, c, s in items:
             f = tk.Frame(p, bg="#222"); f.pack(fill="x", pady=8)
             f_font = ("Segoe UI", 11, "overstrike") if s else ("Segoe UI", 11, "bold")
@@ -191,7 +188,8 @@ class App:
         if self.is_running:
             if messagebox.askyesno("Confirm Exit", "Scan in progress. Exit now?"):
                 self.window.destroy(); sys.exit(0)
-        else: self.window.destroy()
+        else:
+            self.window.destroy()
 
     def upd_mode(self):
         if self.source_mode.get() == "file": 
@@ -204,52 +202,64 @@ class App:
     def sel_file(self):
         f = filedialog.askopenfilename(filetypes=[("Forensic Images", "*.E01;*.001;*.dd;*.img"), ("All Files", "*.*")])
         if f: self.set_path(self.file_path, f)
+
     def sel_folder(self):
         f = filedialog.askdirectory()
         if f: self.set_path(self.file_path, f)
+
     def sel_out(self):
         f = filedialog.askdirectory()
         if f: self.set_path(self.out_dir, f)
+
     def sel_hash(self):
         f = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")])
         if f: self.set_path(self.hash_path, f)
 
     def set_path(self, entry, p):
         entry.delete(0, tk.END); entry.insert(0, p)
-        # Auto-name report if evidence is selected
         if entry == self.file_path and not self.rep_name.get():
-             self.rep_name.insert(0, f"Report_{os.path.basename(p) or 'Drive'}.html")
+            self.rep_name.insert(0, f"Report_{os.path.basename(p) or 'Drive'}.html")
 
     def log(self, t, p=-1):
         if "|||" in t:
             parts = t.split("|||")
             self.status.config(text=parts[0])
-            if len(parts) > 1: self.status_eta.config(text=parts[1])
-            if p >= 0: 
+
+            if p >= 0:
                 self.pbar["value"] = p
-                self.status_pct.config(text=f"{p}%") # Update percentage
-        elif "Indexing..." in t: self.status.config(text=t)
+                self.status_eta.config(text=parts[1])
+
+
+        elif "Indexing..." in t:
+            self.status.config(text=t)
+
         else:
             self.console.config(state="normal")
             self.console.insert(tk.END, t + "\n")
             self.console.see(tk.END)
             self.console.config(state="disabled")
-            if "Done!" in t: 
+
+            if "Done!" in t:
                 self.status.config(text="Scan Complete")
                 self.status_eta.config(text="")
                 self.pbar["value"] = 100
-                self.status_pct.config(text="100%")
+
         self.window.update_idletasks()
 
     def run(self):
         f_in = self.file_path.get(); f_out = self.out_dir.get()
-        if not f_in or not f_out: messagebox.showerror("Error", "Select source/output"); return
+        if not f_in or not f_out:
+            messagebox.showerror("Error", "Select source/output")
+            return
+
         nm = self.rep_name.get().strip()
-        if not nm: nm = f"Report_{os.path.basename(f_in)}.html"
-        if not nm.lower().endswith(".html"): nm += ".html"
+        if not nm:
+            nm = f"Report_{os.path.basename(f_in)}.html"
+        if not nm.lower().endswith(".html"):
+            nm += ".html"
         
-        self.pbar["value"]=0; 
-        self.status_pct.config(text="0%")
+        self.pbar["value"] = 0
+        self.status_eta.config(text="")
         self.start_btn.config(text="SCANNING...", state="disabled", bg="#444")
         self.console.config(state="normal"); self.console.delete(1.0, tk.END); self.console.config(state="disabled")
         self.is_running = True
@@ -264,14 +274,20 @@ class App:
             "notes": self.txt_notes.get("1.0", tk.END).strip(),
             "keywords": self.txt_kws.get("1.0", tk.END).strip()
         }
-        t = threading.Thread(target=self.work, kwargs=scan_args); t.daemon = True; t.start()
+
+        t = threading.Thread(target=self.work, kwargs=scan_args)
+        t.daemon = True
+        t.start()
 
     def work(self, **kwargs):
-        def sl(m, p=-1): self.window.after(0, self.log, m, p)
+        def sl(m, p=-1):
+            self.window.after(0, self.log, m, p)
+
         try:
             recapture.run_recapture(log_callback=sl, **kwargs)
             self.window.after(0, lambda: messagebox.showinfo("Success", "Report Generated!"))
-        except Exception as e: sl(f"Error: {e}")
+        except Exception as e:
+            sl(f"Error: {e}")
         finally:
             self.is_running = False
             self.window.after(0, lambda: self.start_btn.config(text="START SCAN", state="normal", bg="#007acc"))
