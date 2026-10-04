@@ -3,6 +3,19 @@ RECAPTURE v1.0 - Forensic Triage Tool
 Release: Gold Master (v1.0)
 Date:    January 2026
 
+v2.0 DEVELOPMENT
+----------------
+Recapture v2.0 is currently in development.
+
+Development of the next major release began in April 2026 and is focused on
+expanding Recapture's forensic triage and analysis capabilities. Planned work
+includes network drive support, snapshot comparison, NSRL known-file filtering,
+improved keyword and hash matching, updated reporting, macOS support, and a
+redesigned user interface.
+
+Development is taking place on the `v2-development` branch. v1.0 remains the
+current stable release.
+
 DESCRIPTION
 -----------
 Recapture is a standalone forensic triage tool designed for rapid on-site 
